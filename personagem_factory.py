@@ -1,7 +1,7 @@
 import random
 
 from ia.ia_factory import IAFactory
-from personagem import Personagem
+from character import Character
 
 
 class PersonagemFactory:
@@ -78,8 +78,8 @@ class PersonagemFactory:
         return self
 
     def create(self, grupo):
-        novo = Personagem()
-        novo.grupo = grupo
+        novo = Character()
+        novo.group = grupo
         self._preencher(novo)
         return novo
 
@@ -94,29 +94,29 @@ class PersonagemFactory:
             self._preencher(novo, self.builders[base_builder])
         atributos = builder['atributos']
         for atributo in atributos:
-            novo.atributos[atributo] = self._resolver_atributo(atributos[atributo])
+            novo.attributes[atributo] = self._resolver_atributo(atributos[atributo])
         pericias = builder['pericias']
         for pericia in pericias:
             pericia_nome = 'pericia_' + pericia
-            novo.atributos[pericia_nome] = self._resolver_atributo(pericias[pericia])
+            novo.attributes[pericia_nome] = self._resolver_atributo(pericias[pericia])
         partes_corpo = builder['partes_corpo']
         for parte_corpo in partes_corpo:
-            novo.partes_corpo.append(parte_corpo)
+            novo.body_parts.append(parte_corpo)
         self._preencher_resistencias(novo)
-        novo.is_carta_selvagem = builder['is_carta_selvagem']
-        novo.ia = IAFactory().with_builder(builder['ia']).create()
+        novo.is_wildcard = builder['is_carta_selvagem']
+        novo.ai = IAFactory().with_builder(builder['ia']).create()
         for acao in builder['acoes']:
-            novo.acoes.append(acao)
+            novo.actions.append(acao)
 
     def _resolver_atributo(self, param):
         return random.choice(param)
 
     def _preencher_resistencias(self, novo):
-        for parte in novo.partes_corpo:
+        for parte in novo.body_parts:
             resistencia_nome = 'resitencia:' + parte
-            novo.atributos[resistencia_nome] = (novo.atributos['vigor'] // 2) + 2
+            novo.attributes[resistencia_nome] = (novo.attributes['vigor'] // 2) + 2
             if parte[0] == '#':
-                novo.atributos['resistencia'] = (novo.atributos['vigor'] // 2) + 2
+                novo.attributes['resistencia'] = (novo.attributes['vigor'] // 2) + 2
 
     def _increment_counter(self):
         self.counter += 1

@@ -1,10 +1,10 @@
-from acao import Acao
+from action import Action
 
 
-class Sleep(Acao):
+class Sleep(Action):
     def __init__(self):
         super().__init__()
         self.ator = None
 
-    def executar(self):
+    def execute(self):
         print('{} não faz nada'.format(self.ator))

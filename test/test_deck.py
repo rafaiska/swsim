@@ -24,7 +24,7 @@ class TestDeck(unittest.TestCase):
             return first + last // 2
 
         self.deck.create_cards()
-        with mock.patch('gameutils.deck.Random.randint', mocked_randint):
+        with mock.patch('deck.Random.randint', mocked_randint):
             card_a = self.deck.random_draw()
             card_b = self.deck.random_draw()
             card_c = self.deck.random_draw()
@@ -38,9 +38,9 @@ class TestDeck(unittest.TestCase):
     def test_card_comparator(self):
         card_a = Card(Suit.CLUBS, 10)
         card_b = Card(Suit.CLUBS, 11)
-        self.assertGreater(card_b, card_a)
-        card_a = Card(Suit.DIAMONDS, 10)
-        self.assertGreater(card_a, card_b)
+        self.assertTrue(card_b > card_a)
+        card_a = Card(Suit.DIAMONDS, 11)
+        self.assertTrue(card_a > card_b)
 
 
 if __name__ == '__main__':

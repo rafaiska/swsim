@@ -1,3 +1,6 @@
+import logging
+import pathlib
+
 from personagem_factory import PersonagemFactory
 from simulacao import Simulacao
 
@@ -17,6 +20,9 @@ def configurar(simulacao: Simulacao):
 
 
 def main():
+    log_file = str(pathlib.Path.home()) + '/.swsim.log'
+    logging.basicConfig(level=logging.INFO, filename=log_file, filemode='w',
+                        format='%(filename)s:%(levelname)s %(message)s')
     simulacao = Simulacao()
     configurar(simulacao)
     while not simulacao.is_over():

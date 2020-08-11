@@ -1,6 +1,6 @@
 import random
 
-from acao_factory import AcaoFactory
+from action_factory import ActionFactory
 from ia.ia_utils import IAUtils
 from ia.jogador_ia import JogadorIA
 
@@ -10,23 +10,23 @@ class IASimples(JogadorIA):
         self.inimigos = None
 
     def jogar(self, personagem, outros_personagens, melee_nodes, teams):
-        if personagem.abalado:
-            personagem.desabalar()
-        if personagem.abalado:
-            return AcaoFactory().create(['sleep'], personagem)
+        if personagem.shaken:
+            personagem.try_recover_shaken()
+        if personagem.shaken:
+            return ActionFactory().create(['sleep'], personagem)
         if self.inimigos is None:
             self.inimigos = IAUtils.get_inimigos(personagem, outros_personagens, teams)
         alvo = self._escolher_alvo(personagem, melee_nodes)
         if alvo is None:
-            return AcaoFactory().create(['sleep'], personagem)
+            return ActionFactory().create(['sleep'], personagem)
         acao_builder = self._get_acao_ataque(personagem)
-        acao = AcaoFactory().create(acao_builder, personagem)
-        acao.atacado = alvo
+        acao = ActionFactory().create(acao_builder, personagem)
+        acao.attacked = alvo
         return acao
 
     @staticmethod
     def _get_acao_ataque(personagem):
-        for acao in personagem.acoes:
+        for acao in personagem.actions:
             nome_acao = acao[0]
             if nome_acao == 'ataque_desarmado':
                 return acao

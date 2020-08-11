@@ -14,6 +14,6 @@ class IAUtils:
     @staticmethod
     def _get_team(personagem, teams):
         for team in teams:
-            if personagem.grupo in teams[team]:
+            if personagem.group in teams[team]:
                 return team
         raise RuntimeError

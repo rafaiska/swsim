@@ -47,4 +47,6 @@ class Card:
         return self.suit == other.suit and self.number == other.number
 
     def __lt__(self, other):
-        return self.suit < other.suit or (self.suit == other.suit and self.number < other.number)
+        self_number = self.number if self.number != 1 else 14
+        other_number = other.number if other.number != 1 else 14
+        return self_number < other_number or (self_number == other_number and self.suit < other.suit)
