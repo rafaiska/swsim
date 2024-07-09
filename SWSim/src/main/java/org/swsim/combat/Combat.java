@@ -1,5 +1,6 @@
 package org.swsim.combat;
 
+import org.swsim.action.Action;
 import org.swsim.character.Character;
 import org.swsim.core.Deck;
 
@@ -12,8 +13,10 @@ public class Combat {
             for (Character c: characters)
                 c.drawTurnOrder(deck);
             characters.sort(Comparator.comparing(Character::getTurnOrder));
-            for (Character c: characters)
-                c.getPlayer().play(c, characters);
+            for (Character c: characters) {
+                Action a = c.getPlayer().play(c, characters);
+                a.execute();
+            }
         }
     }
 

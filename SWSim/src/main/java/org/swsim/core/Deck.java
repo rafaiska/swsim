@@ -16,7 +16,7 @@ public class Deck {
 
     public void shuffle() {
         for (int i= cards.size() - 1; i >= 0; --i) {
-            int chosenIndex = generator.nextInt() % (cards.size() - i);
+            int chosenIndex = Math.abs(generator.nextInt()) % (cards.size() - i);
             Card c = cards.remove(chosenIndex);
             cards.add(c);
         }
@@ -36,5 +36,9 @@ public class Deck {
         Card c = cards.remove(cards.size() - 1);
         discardPile.add(c);
         return c;
+    }
+
+    public int remainingCards() {
+        return cards.size();
     }
 }

@@ -13,7 +13,10 @@ public class Card implements Comparable<Card>{
 
     @Override
     public String toString() {
-        return String.format("%s of %s", getNumberOrName(), suit.toString());
+        String name =  getNumberOrName();
+        if (number != 15)
+            name += " of " + suit.getName();
+        return name;
     }
 
 
@@ -45,6 +48,14 @@ public class Card implements Comparable<Card>{
     private void check() {
         if (number < 2 || number > 15 || (number != 15 && suit == null))
             throw new WrongCardFormat();
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public Suit getSuit() {
+        return suit;
     }
 
     private static class WrongCardFormat extends RuntimeException {}

@@ -9,7 +9,7 @@ public class Attack extends Action {
     }
 
     @Override
-    void execute() {
+    public void execute() {
     }
 
     public void setAttacker(Character attacker) {
