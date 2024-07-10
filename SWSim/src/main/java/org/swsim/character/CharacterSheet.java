@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 public class CharacterSheet implements Serializable {
-    String name;
-    Boolean isTemplate;
-    Integer advancements;
-    HashMap<String, Integer> attributes;
-    HashMap<String, Integer> skills;
+    public String name;
+    public Boolean isUnique;
+    public Boolean isWildCard;
+    public Integer advancements;
+    public HashMap<String, String> attributes;
+    public HashMap<String, String> skills;
 }

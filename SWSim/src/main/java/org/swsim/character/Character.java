@@ -17,6 +17,7 @@ public class Character {
     private Card currentTurnCard;
     private Player player;
     private Team team;
+    private CharacterSheet sheet;
 
     public void drawTurnOrder(Deck deck) {
         currentTurnCard = deck.draw();
@@ -40,5 +41,18 @@ public class Character {
 
     public boolean isAlly(Character character) {
         return team.isAlly(character.team);
+    }
+
+    public void setAttribute(String attr, String value) {
+        if (!this.sheet.isUnique)
+            throw new TryingChangeNonUniqueCharacter();
+
+        this.sheet.attributes.put(attr, value);
+    }
+
+    public static class TryingChangeNonUniqueCharacter extends RuntimeException {
+        public TryingChangeNonUniqueCharacter() {
+            super("Trying to change non unique character attributes. Change its template sheet instead");
+        }
     }
 }

@@ -1,15 +1,16 @@
 package org.swsim.core;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 class DieTest {
-    @org.junit.jupiter.api.Test
+    @Test
     void roll() {
         Die die = new Die(6);
         Assertions.assertEquals(5, die.roll());
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void rollWithAces() {
         Die normalDie = new Die(6);
         Assertions.assertEquals(5, normalDie.rollWithAces());

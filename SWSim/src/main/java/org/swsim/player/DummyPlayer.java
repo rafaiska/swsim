@@ -3,6 +3,7 @@ package org.swsim.player;
 import org.swsim.action.Action;
 import org.swsim.action.Attack;
 import org.swsim.action.SkipTurn;
+import org.swsim.action.TakeDamage;
 import org.swsim.character.Character;
 
 import java.util.List;
@@ -31,6 +32,24 @@ public class DummyPlayer extends Player {
         attack.setAttacker(character);
         attack.setTarget(attackable);
         return attack;
+    }
+
+    @Override
+    public Action react(Character c, List<Action> turnActions) {
+        for (Action action : turnActions) {
+            Action reaction = reactTo(action);
+            if (reaction != null)
+                return reaction;
+        }
+        return null;
+    }
+
+    private Action reactTo(Action action) {
+        return null;
+    }
+
+    private Action reactTo(Attack attack) {
+        return new TakeDamage(attack);
     }
 
     private Character findFirstAttackable(Character character, List<Character> charactersInCombat) {
