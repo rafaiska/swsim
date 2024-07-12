@@ -1,19 +1,28 @@
 package org.swsim.action;
 
+import org.swsim.attribute.AttributeCompiler;
 import org.swsim.character.Character;
 
-public class Attack extends Action {
+public class Attack implements Action {
     public Attack(String attribute, String skill) {
-        this.attributeForDamageRoll = attribute;
-        this.skillForAttackRoll = skill;
+        this.damageRoll = attribute;
+        this.attackRoll = skill;
     }
 
     @Override
     public void execute() {
     }
 
-    public void setAttacker(Character attacker) {
-        this.attacker = attacker;
+    @Override
+    public void setActor(Character character) {
+        attacker = character;
+        compileAttributes();
+    }
+
+    private void compileAttributes() {
+        AttributeCompiler compiler = new AttributeCompiler(attacker);
+        this.attackRoll = compiler.compile(attackRoll);
+        this.damageRoll = compiler.compile(damageRoll);
     }
 
     public void setTarget(Character target) {
@@ -28,24 +37,24 @@ public class Attack extends Action {
         return target;
     }
 
-    public String getAttributeForDamageRoll() {
-        return attributeForDamageRoll;
+    public String getDamageRoll() {
+        return damageRoll;
     }
 
-    public void setAttributeForDamageRoll(String attributeForDamageRoll) {
-        this.attributeForDamageRoll = attributeForDamageRoll;
+    public void setDamageRoll(String damageRoll) {
+        this.damageRoll = damageRoll;
     }
 
-    public String getSkillForAttackRoll() {
-        return skillForAttackRoll;
+    public String getAttackRoll() {
+        return attackRoll;
     }
 
-    public void setSkillForAttackRoll(String skillForAttackRoll) {
-        this.skillForAttackRoll = skillForAttackRoll;
+    public void setAttackRoll(String attackRoll) {
+        this.attackRoll = attackRoll;
     }
 
     private Character attacker;
     private Character target;
-    private String attributeForDamageRoll;
-    private String skillForAttackRoll;
+    private String damageRoll;
+    private String attackRoll;
 }

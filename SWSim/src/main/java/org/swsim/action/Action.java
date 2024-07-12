@@ -1,5 +1,8 @@
 package org.swsim.action;
 
-public abstract class Action {
-    public abstract void execute();
+import org.swsim.character.Character;
+
+public interface Action {
+    void execute();
+    void setActor(Character character);
 }

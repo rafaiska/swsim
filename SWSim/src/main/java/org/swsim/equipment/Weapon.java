@@ -5,20 +5,21 @@ import org.swsim.action.Attack;
 
 public class Weapon extends Equipment {
 
-    private String attributeRoll;
-    private String skillName;
+    private String damageRoll;
+    private String attackRoll;
     private String damage;
     private Integer range;
 
     @Override
     public Action spawnUseAction() {
-        return new Attack(this.attributeRoll, this.skillName);
+        return new Attack(this.damageRoll, this.attackRoll);
     }
 
     public void setDamage(String damage) {
+        this.damage = damage;
     }
 
-    public String getDamage() {
+    public String getDamageRoll() {
         return damage;
     }
 
@@ -28,5 +29,13 @@ public class Weapon extends Equipment {
 
     public void setRange(int range) {
         this.range = range;
+    }
+
+    public void setAttackRoll(String attackRoll) {
+        this.attackRoll = attackRoll;
+    }
+
+    public String getAttackRoll() {
+        return attackRoll;
     }
 }

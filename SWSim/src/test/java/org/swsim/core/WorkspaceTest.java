@@ -22,7 +22,8 @@ public class WorkspaceTest {
         EquipmentSheet unarmed = new EquipmentSheet();
         unarmed.canEquip = true;
         unarmed.range = 0;
-        unarmed.damage = "Str";
+        unarmed.damageRoll = "Str";
+        unarmed.attackRoll = "Fighting";
         unarmed.type = "W";
         workspace.equipmentSheets.put("Unarmed", unarmed);
     }
