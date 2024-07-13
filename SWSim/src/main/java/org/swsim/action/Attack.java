@@ -1,12 +1,13 @@
 package org.swsim.action;
 
+import org.swsim.attribute.Attribute;
 import org.swsim.attribute.AttributeCompiler;
 import org.swsim.character.Character;
 
 public class Attack implements Action {
-    public Attack(String attribute, String skill) {
-        this.damageRoll = attribute;
-        this.attackRoll = skill;
+    public Attack(Attribute attack, Attribute damage) {
+        this.damageRoll = damage;
+        this.attackRoll = attack;
     }
 
     @Override
@@ -37,24 +38,24 @@ public class Attack implements Action {
         return target;
     }
 
-    public String getDamageRoll() {
+    public Attribute getDamageRoll() {
         return damageRoll;
     }
 
-    public void setDamageRoll(String damageRoll) {
+    public void setDamageRoll(Attribute damageRoll) {
         this.damageRoll = damageRoll;
     }
 
-    public String getAttackRoll() {
+    public Attribute getAttackRoll() {
         return attackRoll;
     }
 
-    public void setAttackRoll(String attackRoll) {
+    public void setAttackRoll(Attribute attackRoll) {
         this.attackRoll = attackRoll;
     }
 
     private Character attacker;
     private Character target;
-    private String damageRoll;
-    private String attackRoll;
+    private Attribute damageRoll;
+    private Attribute attackRoll;
 }

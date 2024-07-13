@@ -1,5 +1,7 @@
 package org.swsim.equipment;
 
+import org.swsim.attribute.Attribute;
+
 import java.util.HashMap;
 
 public class EquipmentLoader {
@@ -18,9 +20,9 @@ public class EquipmentLoader {
 
     private Weapon buildWeapon(EquipmentSheet sheet) {
         Weapon weapon = new Weapon();
-        weapon.setDamage(sheet.damageRoll);
-        weapon.setAttackRoll(sheet.attackRoll);
-        weapon.setRange(sheet.range);
+        weapon.setDamage(new Attribute(sheet.damageRoll));
+        weapon.setAttackRoll(new Attribute(sheet.attackRoll));
+        weapon.setRange(new Attribute(String.valueOf(sheet.range)));
         return weapon;
     }
 }

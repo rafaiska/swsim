@@ -1,7 +1,10 @@
 package org.swsim.action;
 
-public class TakeDamage extends Action {
+import org.swsim.character.Character;
+
+public class TakeDamage implements Action {
     private final Attack attack;
+    private Character character;
 
     public TakeDamage(Attack attack) {
         this.attack = attack;
@@ -10,5 +13,10 @@ public class TakeDamage extends Action {
     @Override
     public void execute() {
             // TODO: check if aced, get damage and bonuses, try to soak, check if wounded
+    }
+
+    @Override
+    public void setActor(Character character) {
+        this.character = character;
     }
 }

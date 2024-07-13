@@ -22,7 +22,8 @@ public class DiceRoll {
         for (Die d: dice) {
             accumulator += aces ? d.rollWithAces() : d.roll();
         }
-        return accumulator;
+        result = accumulator;
+        return result;
     }
 
     public void reset() {
@@ -32,6 +33,11 @@ public class DiceRoll {
     private final int seed;
     private final List<Die> dice;
     private final boolean aces;
+    private int result;
+
+    public Object getResult() {
+        return result;
+    }
 
     public static class DiceRollWODice extends RuntimeException {}
 }

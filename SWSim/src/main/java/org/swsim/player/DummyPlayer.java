@@ -29,7 +29,7 @@ public class DummyPlayer extends Player {
         if (attackable == null)
             return new SkipTurn();
 
-        attack.setAttacker(character);
+        attack.setTarget(character);
         attack.setTarget(attackable);
         return attack;
     }

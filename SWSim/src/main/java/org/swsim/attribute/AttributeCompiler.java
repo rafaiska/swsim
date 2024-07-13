@@ -9,7 +9,11 @@ public class AttributeCompiler {
         this.character = character;
     }
 
-    public String compile(String roll) {
-        return "";
+    public static boolean isCompiled(Attribute attribute) {
+        return true;
+    }
+
+    public Attribute compile(Attribute attribute) {
+        return new Attribute("d6");
     }
 }

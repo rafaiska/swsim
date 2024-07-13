@@ -2,40 +2,40 @@ package org.swsim.equipment;
 
 import org.swsim.action.Action;
 import org.swsim.action.Attack;
+import org.swsim.attribute.Attribute;
 
 public class Weapon extends Equipment {
 
-    private String damageRoll;
-    private String attackRoll;
-    private String damage;
-    private Integer range;
+    private Attribute attack;
+    private Attribute damage;
+    private Attribute range;
 
     @Override
     public Action spawnUseAction() {
-        return new Attack(this.damageRoll, this.attackRoll);
+        return new Attack(this.attack, this.damage);
     }
 
-    public void setDamage(String damage) {
+    public void setDamage(Attribute damage) {
         this.damage = damage;
     }
 
-    public String getDamageRoll() {
+    public Attribute getDamageRoll() {
         return damage;
     }
 
-    public Integer getRange() {
+    public Attribute getRange() {
         return range;
     }
 
-    public void setRange(int range) {
+    public void setRange(Attribute range) {
         this.range = range;
     }
 
-    public void setAttackRoll(String attackRoll) {
-        this.attackRoll = attackRoll;
+    public void setAttackRoll(Attribute attack) {
+        this.attack = attack;
     }
 
-    public String getAttackRoll() {
-        return attackRoll;
+    public Attribute getAttackRoll() {
+        return attack;
     }
 }
