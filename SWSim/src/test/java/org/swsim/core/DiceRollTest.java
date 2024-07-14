@@ -18,6 +18,6 @@ class DiceRollTest {
         diceRoll.addDie(6);
         assertEquals(5, diceRoll.roll());
         diceRoll.reset();
-        assertThrows(DiceRoll.DiceRollWODice.class, diceRoll::roll);
+        assertEquals(0, diceRoll.roll());
     }
 }

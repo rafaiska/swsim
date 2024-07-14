@@ -1,7 +1,6 @@
 package org.swsim.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -57,25 +56,23 @@ public class RollParser {
     }
 
     private void addNewTokenInOrder(RollToken newToken) {
-        int cursor = 0;
-        RollToken previousToken = null;
-        RollToken nextToken = null;
-
-        while (cursor < tokens.size() && tokens.get(cursor).startinPos <= newToken.startinPos)
-        {
-            previousToken = tokens.get(cursor);
-            ++cursor;
-            if (cursor < tokens.size())
-                nextToken = tokens.get(cursor);
+        if (tokens.isEmpty()) {
+            tokens.add(newToken);
+            return;
         }
 
-        if (previousToken != null && previousToken.endingPos > newToken.startinPos)
-            return;
-
-        if (nextToken != null && nextToken.startinPos < newToken.endingPos)
-            return;
-
-        tokens.add(cursor, newToken);
+        int cursor = 0;
+        RollToken previousToken = null;
+        while (cursor < tokens.size() + 1)
+        {
+            RollToken cursorToken = cursor == tokens.size() ? null : tokens.get(cursor);
+            if ((previousToken == null || newToken.compareTo(previousToken) > 0) && (cursorToken == null || newToken.compareTo(cursorToken) < 0)) {
+                tokens.add(cursor, newToken);
+                break;
+            }
+            ++cursor;
+            previousToken = cursorToken;
+        }
     }
 
     public int rollForResult() {
@@ -102,5 +99,55 @@ public class RollParser {
 
     public List<RollToken> getTokens() {
         return tokens;
+    }
+
+    public void execute() {
+        createRolls();
+        for (DiceRoll roll: diceRolls.values()) {
+            roll.roll();
+        }
+    }
+
+    private void createRolls() {
+        for (RollToken token: tokens) {
+            if (!diceRolls.containsKey(token)) {
+                switch (token.type) {
+                    case DICE -> createDiceRoll(token);
+                    case MODIFIER -> createModiferRoll(token);
+                    case ATTRIBUTE -> throw new RuntimeException("Cannot create roll for unassigned attributes");
+                }
+            }
+        }
+    }
+
+    private void createDiceRoll(RollToken token) {
+        int sign = token.text.getBytes()[0] == '-' ? -1 : 1;
+
+        String rollTextWOSign = token.text.replaceAll("[+-]", "");
+        String[] values = token.text.split("d");
+        int numberOfDice = !values[0].isEmpty() ? Math.abs(Integer.parseInt(values[0])) : 1;
+        int numberOfFaces = Integer.parseInt(values[1]);
+
+        DiceRoll diceRoll = new DiceRoll(0, false);
+        for (int i=0; i<numberOfDice; ++i)
+            diceRoll.addDie(numberOfFaces);
+        diceRoll.setSign(sign);
+        diceRolls.put(token, diceRoll);
+    }
+
+
+    private void createModiferRoll(RollToken token) {
+        DiceRoll diceRoll = new DiceRoll(0, false);
+        diceRoll.setModifier(Integer.parseInt(token.text));
+        diceRolls.put(token, diceRoll);
+    }
+
+    public String printResult() {
+        StringBuilder ret = new StringBuilder();
+        for (RollToken token: tokens)
+            ret.append(diceRolls.get(token).printResult()).append(" ");
+        ret.append("= ");
+        ret.append((Integer) diceRolls.values().stream().mapToInt(DiceRoll::getResult).sum());
+        return ret.toString();
     }
 }

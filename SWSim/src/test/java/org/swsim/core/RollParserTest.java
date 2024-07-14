@@ -3,6 +3,7 @@ package org.swsim.core;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RollParserTest {
     @Test
@@ -48,5 +49,37 @@ class RollParserTest {
         assertEquals(8, parser.getTokens().get(1).startinPos);
         assertEquals(12, parser.getTokens().get(1).endingPos);
         assertEquals("+2d4", parser.getTokens().get(1).text);
+    }
+
+    @Test
+    public void executeRolls() {
+        RollParser parser = new RollParser("d6 + 2d4 - 8");
+        parser.parse();
+        parser.execute();
+
+        assertEquals("+5 (d6) +1 (d4) +1 (d4) -8 = -1", parser.printResult());
+    }
+
+    @Test
+    public void rollTokenOrder() {
+        RollToken a = new RollToken();
+        a.startinPos = 4;
+        a.endingPos = 8;
+
+        RollToken b = new RollToken();
+        b.startinPos = 0;
+        b.endingPos = 4;
+        assertTrue(a.compareTo(b) > 0);
+
+        b.startinPos = 2;
+        b.endingPos = 6;
+        assertEquals(0, a.compareTo(b));
+
+        b.startinPos = 4;
+        b.endingPos = 12;
+        assertEquals(0, a.compareTo(b));
+
+        b.startinPos = 8;
+        assertTrue(a.compareTo(b) < 0);
     }
 }
