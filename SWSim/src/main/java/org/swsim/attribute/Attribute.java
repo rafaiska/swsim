@@ -9,6 +9,7 @@ public class Attribute {
     private String maxValue;
     private String lastRollValue;
     private RollParser rollParser;
+    private int result;
 
     public Attribute(String maxValue) {
         this.maxValue = maxValue;
@@ -25,7 +26,8 @@ public class Attribute {
             rollParser.parse();
             lastRollValue = value;
         }
-        return rollParser.rollForResult();
+        result = rollParser.rollForResult();
+        return result;
     }
 
     private boolean needsToUpdateRoll() {
@@ -34,5 +36,14 @@ public class Attribute {
 
     public String getValue() {
         return value;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void appendToValue(String increment) {
+        value += increment;
+        maxValue += increment;
     }
 }

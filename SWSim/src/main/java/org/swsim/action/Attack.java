@@ -12,6 +12,19 @@ public class Attack implements Action {
 
     @Override
     public void execute() {
+        attackRoll.roll();
+        if (attackWasRaised())
+            addRaiseBonusToDamageRoll();
+        damageRoll.roll();
+    }
+
+    private boolean attackWasRaised() {
+        int margin = attackRoll.getResult() - target.getAttribute("Parry").getResult();
+        return (margin / 4) >= 1;
+    }
+
+    private void addRaiseBonusToDamageRoll() {
+        damageRoll.appendToValue("+d6");
     }
 
     @Override
@@ -58,4 +71,6 @@ public class Attack implements Action {
     private Character target;
     private Attribute damageRoll;
     private Attribute attackRoll;
+    private int attackResult;
+    private int damageResult;
 }

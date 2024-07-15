@@ -48,4 +48,8 @@ public class Character {
     public void setAttribute(String attr, Attribute value) {
         attributes.put(attr, value);
     }
+
+    public Attribute getAttribute(String attributeName) {
+        return attributes.get(attributeName);
+    }
 }

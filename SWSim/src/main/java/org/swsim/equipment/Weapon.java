@@ -19,7 +19,7 @@ public class Weapon extends Equipment {
         this.damage = damage;
     }
 
-    public Attribute getDamageRoll() {
+    public Attribute getDamage() {
         return damage;
     }
 
@@ -35,7 +35,7 @@ public class Weapon extends Equipment {
         this.attack = attack;
     }
 
-    public Attribute getAttackRoll() {
+    public Attribute getAttackAttribute() {
         return attack;
     }
 }
