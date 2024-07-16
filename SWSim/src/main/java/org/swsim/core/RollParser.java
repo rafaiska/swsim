@@ -1,8 +1,11 @@
 package org.swsim.core;
 
+import org.swsim.attribute.Attribute;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -78,7 +81,8 @@ public class RollParser {
     public int rollForResult() {
         if (!canRoll())
             throw new RuntimeException("Cannot roll: " + rollText);
-        return 0;
+        execute();
+        return diceRolls.values().stream().mapToInt(DiceRoll::roll).sum();
     }
 
     private void preProcess() {
@@ -90,7 +94,7 @@ public class RollParser {
     }
 
     public boolean canRoll() {
-        return readyToRoll;
+        return attributesFound().isEmpty();
     }
 
     public List<DiceRoll> getDiceRolls() {
@@ -128,7 +132,7 @@ public class RollParser {
         int numberOfDice = !values[0].isEmpty() ? Math.abs(Integer.parseInt(values[0])) : 1;
         int numberOfFaces = Integer.parseInt(values[1]);
 
-        DiceRoll diceRoll = new DiceRoll(0, false);
+        DiceRoll diceRoll = new DiceRoll(false);
         for (int i=0; i<numberOfDice; ++i)
             diceRoll.addDie(numberOfFaces);
         diceRoll.setSign(sign);
@@ -137,7 +141,7 @@ public class RollParser {
 
 
     private void createModiferRoll(RollToken token) {
-        DiceRoll diceRoll = new DiceRoll(0, false);
+        DiceRoll diceRoll = new DiceRoll(false);
         diceRoll.setModifier(Integer.parseInt(token.text));
         diceRolls.put(token, diceRoll);
     }
@@ -149,5 +153,11 @@ public class RollParser {
         ret.append("= ");
         ret.append((Integer) diceRolls.values().stream().mapToInt(DiceRoll::getResult).sum());
         return ret.toString();
+    }
+
+    public void replaceAttributeToken(String attributeName, Attribute attribute) {
+        if (!rollText.contains(attributeName))
+            throw new RuntimeException("Attribute token not found: " + attributeName);
+        rollText = rollText.replaceAll(attributeName, attribute.getValue());
     }
 }

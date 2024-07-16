@@ -13,12 +13,12 @@ public class Attack implements Action {
     @Override
     public void execute() {
         attackRoll.roll();
-        if (attackWasRaised())
+        if (wasRaised())
             addRaiseBonusToDamageRoll();
         damageRoll.roll();
     }
 
-    private boolean attackWasRaised() {
+    public boolean wasRaised() {
         int margin = attackRoll.getResult() - target.getAttribute("Parry").getResult();
         return (margin / 4) >= 1;
     }
@@ -43,34 +43,16 @@ public class Attack implements Action {
         this.target = target;
     }
 
-    public Character getAttacker() {
-        return attacker;
+    public int getAttackResult() {
+        return attackRoll.getResult();
     }
 
-    public Character getTarget() {
-        return target;
-    }
-
-    public Attribute getDamageRoll() {
-        return damageRoll;
-    }
-
-    public void setDamageRoll(Attribute damageRoll) {
-        this.damageRoll = damageRoll;
-    }
-
-    public Attribute getAttackRoll() {
-        return attackRoll;
-    }
-
-    public void setAttackRoll(Attribute attackRoll) {
-        this.attackRoll = attackRoll;
+    public int getDamageResult() {
+        return damageRoll.getResult();
     }
 
     private Character attacker;
     private Character target;
     private Attribute damageRoll;
     private Attribute attackRoll;
-    private int attackResult;
-    private int damageResult;
 }

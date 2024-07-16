@@ -1,11 +1,17 @@
 package org.swsim.core;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RollParserTest {
+    @BeforeAll
+    static void configureSeed() {
+        RandomSeedManager.getInstance().setSeed(1);
+    }
+
     @Test
     public void parseSimpleRoll() {
         RollParser parser = new RollParser("3d6");
@@ -57,7 +63,7 @@ class RollParserTest {
         parser.parse();
         parser.execute();
 
-        assertEquals("+5 (d6) +1 (d4) +1 (d4) -8 = -1", parser.printResult());
+        assertEquals("+4 (d6) +2 (d4) +2 (d4) -8 = 0", parser.printResult());
     }
 
     @Test

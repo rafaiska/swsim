@@ -5,14 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DiceRoll {
-    public DiceRoll (int seed, boolean aces) {
-        this.seed = seed;
+    public DiceRoll (boolean aces) {
         this.aces = aces;
         dice = new ArrayList<>();
     }
 
     public DiceRoll addDie(int faces) {
-        dice.add(new Die(faces, seed));
+        dice.add(new Die(faces));
         return this;
     }
 
@@ -48,7 +47,6 @@ public class DiceRoll {
         return diceStr + modStr;
     }
 
-    private final int seed;
     private final List<Die> dice;
     private final boolean aces;
     private int sign = 1;

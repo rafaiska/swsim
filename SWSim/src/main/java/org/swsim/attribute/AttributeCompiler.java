@@ -10,10 +10,17 @@ public class AttributeCompiler {
     }
 
     public static boolean isCompiled(Attribute attribute) {
-        return true;
+        return attribute.getRollAttributes().isEmpty();
     }
 
     public Attribute compile(Attribute attribute) {
-        return new Attribute("d6");
+        Attribute ret = new Attribute(attribute.getMaxValue());
+        for (String attrTokenName: attribute.getRollAttributes()) {
+            Attribute charAttr = character.getAttribute(attrTokenName);
+            if (charAttr == null)
+                throw new RuntimeException("Character does not have enough attributes to compile");
+            ret.fillAttributeRoll(attrTokenName, charAttr);
+        }
+        return ret;
     }
 }

@@ -11,13 +11,9 @@ public class Die {
     Random generator;
     int result;
 
-    public Die(int faces, int seed) {
-        this.faces = faces;
-        generator = new Random(seed);
-    }
-
     public Die(int faces) {
-        this(faces, 0);
+        this.faces = faces;
+        generator = new Random(RandomSeedManager.getInstance().getSeed());
     }
 
     public int roll() {

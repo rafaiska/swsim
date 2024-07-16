@@ -10,12 +10,20 @@ class AttackTest {
 
     @Test
     public void simpleAttack() {
-        Character attacker = new Character();
         Character target = new Character();
+        target.setAttribute("Parry", new Attribute("4"));
+
+        Character attacker = new Character();
         attacker.setAttribute("Str", new Attribute("d6"));
-        Attack attack = new Attack(new Attribute("Str"), new Attribute("Fighting"));
-        attack.setTarget(attacker);
+        attacker.setAttribute("Fighting", new Attribute("d8"));
+
+        Attack attack = new Attack(new Attribute("Fighting"), new Attribute("Str"));
+        attack.setActor(attacker);
         attack.setTarget(target);
         attack.execute();
+
+        assertTrue(attack.wasRaised());
+        assertEquals(8, attack.getAttackResult());
+        assertEquals(4, attack.getDamageResult());
     }
 }
