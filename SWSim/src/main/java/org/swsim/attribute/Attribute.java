@@ -2,10 +2,10 @@ package org.swsim.attribute;
 
 import org.swsim.core.RollParser;
 import org.swsim.core.RollToken;
+import org.swsim.core.RollTokenType;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Attribute {
@@ -14,17 +14,12 @@ public class Attribute {
     private String lastRollValue;
     private RollParser rollParser;
     private int result;
+    private boolean isCompiled;
 
     public Attribute(String maxValue) {
-        this.maxValue = appendPlusIfNecessary(maxValue);
+        this.maxValue = maxValue;
         this.value = this.maxValue;
-    }
-
-    private String appendPlusIfNecessary(String value) {
-        if (Pattern.matches("[+-].+", value))
-            return value;
-        else
-            return "+" + value;
+        this.isCompiled = false;
     }
 
     public void roll() {
@@ -61,19 +56,31 @@ public class Attribute {
         return maxValue;
     }
 
-    public List<String> getRollAttributes() {
+    public List<String> getAttributeDependencies() {
         return getRollParser().attributesFound();
-    }
-
-    public void fillAttributeRoll(String attributeName, Attribute attribute) {
-        getRollParser().replaceAttributeToken(attributeName, attribute);
     }
 
     public List<RollToken> getRollTokens() {
         return getRollParser().getTokens();
     }
 
-    public String getCompiledValue() {
-        return getRollTokens().stream().map(T -> T.text).collect(Collectors.joining(" "));
+    @Override
+    public String toString() {
+        return getRollTokens().stream().map(this::getDescription).collect(Collectors.joining(" "));
+    }
+
+    private String getDescription(RollToken token) {
+        if (token.type == RollTokenType.ATTRIBUTE)
+            return String.format("(%s)(%s)", token.attributeDependency.toString(), token.text);
+        else
+            return token.text;
+    }
+
+    public boolean isCompiled() {
+        return isCompiled;
+    }
+
+    public void setCompiled(boolean compiled) {
+        isCompiled = compiled;
     }
 }

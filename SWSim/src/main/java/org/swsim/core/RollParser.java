@@ -1,11 +1,8 @@
 package org.swsim.core;
 
-import org.swsim.attribute.Attribute;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
@@ -79,8 +76,6 @@ public class RollParser {
     }
 
     public int rollForResult() {
-        if (!canRoll())
-            throw new RuntimeException("Cannot roll: " + rollText);
         execute();
         return diceRolls.values().stream().mapToInt(DiceRoll::roll).sum();
     }
@@ -106,19 +101,19 @@ public class RollParser {
     }
 
     public void execute() {
-        createRolls();
+        createRolls(tokens);
         for (DiceRoll roll: diceRolls.values()) {
             roll.roll();
         }
     }
 
-    private void createRolls() {
-        for (RollToken token: tokens) {
+    private void createRolls(List<RollToken> rollTokens) {
+        for (RollToken token: rollTokens) {
             if (!diceRolls.containsKey(token)) {
                 switch (token.type) {
                     case DICE -> createDiceRoll(token);
                     case MODIFIER -> createModiferRoll(token);
-                    case ATTRIBUTE -> throw new RuntimeException("Cannot create roll for unassigned attributes");
+                    case ATTRIBUTE -> createRolls(token.attributeDependency.getRollTokens());
                 }
             }
         }
@@ -153,11 +148,5 @@ public class RollParser {
         ret.append("= ");
         ret.append((Integer) diceRolls.values().stream().mapToInt(DiceRoll::getResult).sum());
         return ret.toString();
-    }
-
-    public void replaceAttributeToken(String attributeName, Attribute attribute) {
-        if (!rollText.contains(attributeName))
-            throw new RuntimeException("Attribute token not found: " + attributeName);
-        rollText = rollText.replaceAll(attributeName, attribute.getValue());
     }
 }

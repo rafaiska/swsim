@@ -1,10 +1,13 @@
 package org.swsim.core;
 
+import org.swsim.attribute.Attribute;
+
 public class RollToken implements Comparable<RollToken>{
     public String text;
     public int startinPos;
     public int endingPos;
     public RollTokenType type;
+    public Attribute attributeDependency;
 
     @Override
     public int compareTo(RollToken o) {
