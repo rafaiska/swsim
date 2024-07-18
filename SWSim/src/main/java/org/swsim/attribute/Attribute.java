@@ -1,79 +1,37 @@
 package org.swsim.attribute;
 
-import org.swsim.core.RollParser;
-import org.swsim.core.RollToken;
-import org.swsim.core.RollTokenType;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Attribute {
     private String value;
-    private String maxValue;
-    private String lastRollValue;
-    private RollParser rollParser;
-    private int result;
     private boolean isCompiled;
+    private HashMap<String, AttributeToken> tokens;
 
-    public Attribute(String maxValue) {
-        this.maxValue = maxValue;
-        this.value = this.maxValue;
+    public Attribute(String value) {
+        this.value = value;
         this.isCompiled = false;
+        mapAllTokens();
     }
 
-    public void roll() {
-        result = getRollParser().rollForResult();
-    }
-
-    private RollParser getRollParser() {
-        if (needsToUpdateRollParser()) {
-            rollParser = new RollParser(value);
-            rollParser.parse();
-            lastRollValue = value;
+    private void mapAllTokens() {
+        tokens = new HashMap<>();
+        Matcher attrMatcher = Pattern.compile("[+-]?[a-zA-Z]+").matcher(value);
+        while (attrMatcher.find()) {
+            AttributeToken newToken = new AttributeToken();
+            newToken.tokenText = value.substring(attrMatcher.start(), attrMatcher.end());
+            tokens.put(newToken.tokenText, newToken);
         }
-        return rollParser;
-    }
-
-    private boolean needsToUpdateRollParser() {
-        return !Objects.equals(lastRollValue, value);
     }
 
     public String getValue() {
         return value;
     }
 
-    public int getResult() {
-        return result;
-    }
-
     public void appendToValue(String increment) {
         value += increment;
-        maxValue += increment;
-    }
-
-    public String getMaxValue() {
-        return maxValue;
-    }
-
-    public List<String> getAttributeDependencies() {
-        return getRollParser().attributesFound();
-    }
-
-    public List<RollToken> getRollTokens() {
-        return getRollParser().getTokens();
-    }
-
-    @Override
-    public String toString() {
-        return getRollTokens().stream().map(this::getDescription).collect(Collectors.joining(" "));
-    }
-
-    private String getDescription(RollToken token) {
-        if (token.type == RollTokenType.ATTRIBUTE)
-            return String.format("(%s)(%s)", token.attributeDependency.toString(), token.text);
-        else
-            return token.text;
+        value += increment;
     }
 
     public boolean isCompiled() {

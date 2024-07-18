@@ -11,7 +11,7 @@ class AttributeCompilerTest {
         Attribute a = new Attribute("Str + d4");
         Character c = new Character();
         c.setAttribute("Str", new Attribute("d12 + 1"));
-        Attribute compiled = new AttributeCompiler(c).compile(a);
+        new AttributeCompiler(c).compile(a);
         assertEquals("d12 +1 +d4", compiled.toString());
     }
 }

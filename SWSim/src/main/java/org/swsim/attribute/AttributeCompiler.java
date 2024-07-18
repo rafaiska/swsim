@@ -16,9 +16,9 @@ public class AttributeCompiler {
         this.character = character;
     }
 
-    public Attribute compile(Attribute attribute) {
+    public void compile(Attribute attribute) {
         if (attribute.isCompiled())
-            return attribute;
+            return;
         visitedAttrs.clear();
         searchStack.clear();
         searchStack.add(attribute);
@@ -32,7 +32,6 @@ public class AttributeCompiler {
 
         for (Attribute a: visitedAttrs)
             a.setCompiled(true);
-        return attribute;
     }
 
     private void compileAttr(Attribute stackAttribute) {
