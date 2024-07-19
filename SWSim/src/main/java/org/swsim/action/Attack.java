@@ -6,25 +6,27 @@ import org.swsim.character.Character;
 
 public class Attack implements Action {
     public Attack(Attribute attack, Attribute damage) {
-        this.damageRoll = damage;
-        this.attackRoll = attack;
+        this.damageAttr = damage;
+        this.attackAttr = attack;
     }
 
     @Override
     public void execute() {
-        attackRoll.roll();
-        if (wasRaised())
+        AttributeRoller roller = new AttributeRoller(attackAttr);
+        roller.roll();
+        if (wasRaised(roller))
             addRaiseBonusToDamageRoll();
-        damageRoll.roll();
+        damageAttr.roll();
     }
 
-    public boolean wasRaised() {
-        int margin = attackRoll.getResult() - target.getAttribute("Parry").getResult();
-        return (margin / 4) >= 1;
+    public boolean wasRaised(AttributeRoller roller) {
+        int defense = isMelee ? target.getAttribute("Parry").castToInt() : 4;
+        int raises = roller.getRaisesAgainst(defense);
+        return raises >= 1;
     }
 
     private void addRaiseBonusToDamageRoll() {
-        damageRoll.appendToValue("+d6");
+        damageAttr.appendToValue("+d6");
     }
 
     @Override
@@ -35,8 +37,8 @@ public class Attack implements Action {
 
     private void compileAttributes() {
         AttributeCompiler compiler = new AttributeCompiler(attacker);
-        this.attackRoll = compiler.compile(attackRoll);
-        this.damageRoll = compiler.compile(damageRoll);
+        compiler.compile(attackAttr);
+        compiler.compile(damageAttr);
     }
 
     public void setTarget(Character target) {
@@ -44,15 +46,20 @@ public class Attack implements Action {
     }
 
     public int getAttackResult() {
-        return attackRoll.getResult();
+        return attackResult;
     }
 
     public int getDamageResult() {
-        return damageRoll.getResult();
+        return damageResult;
     }
 
     private Character attacker;
     private Character target;
-    private Attribute damageRoll;
-    private Attribute attackRoll;
+    private final Attribute damageAttr;
+    private final Attribute attackAttr;
+    private int attackResult;
+    private String attackResultString;
+    private boolean wasRaised;
+    private int damageResult;
+    private String damageResultString;
 }

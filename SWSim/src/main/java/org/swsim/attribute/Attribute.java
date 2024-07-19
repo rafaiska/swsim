@@ -1,32 +1,23 @@
 package org.swsim.attribute;
 
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Attribute {
     private String value;
     private boolean isCompiled;
-    private HashMap<String, AttributeToken> tokens;
+    private HashMap<String, Attribute> dependencies;
 
     public Attribute(String value) {
-        this.value = value;
-        this.isCompiled = false;
-        mapAllTokens();
-    }
-
-    private void mapAllTokens() {
-        tokens = new HashMap<>();
-        Matcher attrMatcher = Pattern.compile("[+-]?[a-zA-Z]+").matcher(value);
-        while (attrMatcher.find()) {
-            AttributeToken newToken = new AttributeToken();
-            newToken.tokenText = value.substring(attrMatcher.start(), attrMatcher.end());
-            tokens.put(newToken.tokenText, newToken);
-        }
+        setValue(value);
     }
 
     public String getValue() {
         return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+        setCompiled(false);
     }
 
     public void appendToValue(String increment) {
@@ -40,5 +31,19 @@ public class Attribute {
 
     public void setCompiled(boolean compiled) {
         isCompiled = compiled;
+        if (!compiled)
+            dependencies = new HashMap<>();
+    }
+
+    public String getRollText() {
+        String ret = value;
+        for (String depName : dependencies.keySet()) {
+            ret = ret.replaceAll(depName, String.format("(%s)", dependencies.get(depName).getRollText()));
+        }
+        return ret;
+    }
+
+    public void addDependency(String depName, Attribute dependency) {
+        dependencies.put(depName, dependency);
     }
 }

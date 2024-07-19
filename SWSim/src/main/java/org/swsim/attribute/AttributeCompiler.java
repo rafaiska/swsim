@@ -5,12 +5,18 @@ import org.swsim.core.RollToken;
 import org.swsim.core.RollTokenType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AttributeCompiler {
     Character character;
     HashSet<Attribute> visitedAttrs = new HashSet<>();
     ArrayList<Attribute> searchStack = new ArrayList<>();
+
+    final HashSet<String> BLACKLISTED_TOKENS = new HashSet<>(List.of("d", "da"));
 
     public AttributeCompiler(Character character) {
         this.character = character;
@@ -25,23 +31,39 @@ public class AttributeCompiler {
 
         while (!searchStack.isEmpty()) {
             Attribute stackAttribute = searchStack.removeLast();
-            visitedAttrs.add(stackAttribute);
-            if (!stackAttribute.isCompiled())
-                compileAttr(stackAttribute);
+            if (!visitedAttrs.contains(stackAttribute)) {
+                visitedAttrs.add(stackAttribute);
+                if (!stackAttribute.isCompiled())
+                    compileAttr(stackAttribute);
+            }
         }
 
         for (Attribute a: visitedAttrs)
             a.setCompiled(true);
     }
 
-    private void compileAttr(Attribute stackAttribute) {
-        for (RollToken attrToken : stackAttribute.getRollTokens().stream().filter(T -> T.type == RollTokenType.ATTRIBUTE).toList()) {
-            Attribute dependency = character.getAttribute(attrToken.text);
+    private void compileAttr(Attribute attribute) {
+        HashMap<String, AttributeToken> tokens = mapAllTokens(attribute);
+        for (String dependencyName: tokens.keySet()) {
+            Attribute dependency = character.getAttribute(dependencyName);
             if (dependency == null)
                 throw new RuntimeException("Unable to solve dependency on attribute compilation");
-            attrToken.attributeDependency = dependency;
+            attribute.addDependency(dependencyName, dependency);
             searchStack.add(dependency);
-            visitedAttrs.add(dependency);
         }
+    }
+
+    private HashMap<String, AttributeToken> mapAllTokens(Attribute attribute) {
+        HashMap<String, AttributeToken> tokens = new HashMap<>();
+        Matcher attrMatcher = Pattern.compile("[a-zA-Z]+").matcher(attribute.getValue());
+        while (attrMatcher.find()) {
+            String tokenText = attribute.getValue().substring(attrMatcher.start(), attrMatcher.end());
+            if (!BLACKLISTED_TOKENS.contains(tokenText)) {
+                AttributeToken newToken = new AttributeToken();
+                newToken.tokenText = tokenText;
+                tokens.put(newToken.tokenText, newToken);
+            }
+        }
+        return tokens;
     }
 }
