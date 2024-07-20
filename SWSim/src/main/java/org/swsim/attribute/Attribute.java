@@ -20,11 +20,6 @@ public class Attribute {
         setCompiled(false);
     }
 
-    public void appendToValue(String increment) {
-        value += increment;
-        value += increment;
-    }
-
     public boolean isCompiled() {
         return isCompiled;
     }
@@ -45,5 +40,9 @@ public class Attribute {
 
     public void addDependency(String depName, Attribute dependency) {
         dependencies.put(depName, dependency);
+    }
+
+    public int castToInt() {
+        return Integer.parseInt(getRollText());
     }
 }

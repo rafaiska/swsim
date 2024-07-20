@@ -66,4 +66,10 @@ public class AttributeCompiler {
         }
         return tokens;
     }
+
+    public void compileAll() {
+        for (Attribute a: character.getAllAttributes()) {
+            compile(a);
+        }
+    }
 }

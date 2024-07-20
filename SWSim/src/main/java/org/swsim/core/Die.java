@@ -6,17 +6,25 @@ import java.util.Random;
 
 public class Die {
     int faces;
+    boolean aced;
+    int sign;
     boolean lastRollWasAced;
     List<Integer> aceRollValues;
     Random generator;
     int result;
 
-    public Die(int faces) {
+    public Die(int faces, boolean aced, int sign) {
+        this.aced = aced;
         this.faces = faces;
+        this.sign = sign;
         generator = new Random(RandomSeedManager.getInstance().getSeed());
     }
 
     public int roll() {
+        return aced ? rollWithAces() : rollWoAces();
+    }
+
+    public int rollWoAces() {
         lastRollWasAced = false;
         result = (Math.abs(generator.nextInt()) % faces) + 1;
         return result;

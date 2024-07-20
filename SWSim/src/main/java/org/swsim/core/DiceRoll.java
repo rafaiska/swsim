@@ -5,20 +5,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DiceRoll {
-    public DiceRoll (boolean aces) {
-        this.aces = aces;
+    public DiceRoll () {
         dice = new ArrayList<>();
+        mod = 0;
+        sign = 1;
+    }
+
+    public DiceRoll addDie(int faces, boolean aced, int sign) {
+        dice.add(new Die(faces, aced, sign));
+        return this;
     }
 
     public DiceRoll addDie(int faces) {
-        dice.add(new Die(faces));
+        addDie(faces, false, 1);
         return this;
     }
 
     public int roll() {
         int accumulator = 0;
         for (Die d: dice) {
-            accumulator += aces ? d.rollWithAces() : d.roll();
+            accumulator += d.roll();
         }
         result = (accumulator * sign) + mod;
         return result;
@@ -48,8 +54,11 @@ public class DiceRoll {
     }
 
     private final List<Die> dice;
-    private final boolean aces;
-    private int sign = 1;
-    private int mod = 0;
+    private int sign;
+    private int mod;
     private int result;
+
+    public void addMod(int mod) {
+        this.mod += mod;
+    }
 }

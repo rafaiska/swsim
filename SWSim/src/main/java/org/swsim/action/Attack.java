@@ -2,10 +2,13 @@ package org.swsim.action;
 
 import org.swsim.attribute.Attribute;
 import org.swsim.attribute.AttributeCompiler;
+import org.swsim.attribute.AttributeRoller;
 import org.swsim.character.Character;
+import org.swsim.core.DiceRoll;
 
 public class Attack implements Action {
     public Attack(Attribute attack, Attribute damage) {
+        isMelee = true;
         this.damageAttr = damage;
         this.attackAttr = attack;
     }
@@ -13,20 +16,16 @@ public class Attack implements Action {
     @Override
     public void execute() {
         AttributeRoller roller = new AttributeRoller(attackAttr);
-        roller.roll();
-        if (wasRaised(roller))
-            addRaiseBonusToDamageRoll();
-        damageAttr.roll();
+        attackRoll = roller.roll();
+        Attribute damageBonus = wasRaised(roller) ? new Attribute("d6") : new Attribute("0");
+        roller = new AttributeRoller(damageAttr).addBonus(damageBonus);
+        damageRoll = roller.roll();
     }
 
     public boolean wasRaised(AttributeRoller roller) {
         int defense = isMelee ? target.getAttribute("Parry").castToInt() : 4;
         int raises = roller.getRaisesAgainst(defense);
         return raises >= 1;
-    }
-
-    private void addRaiseBonusToDamageRoll() {
-        damageAttr.appendToValue("+d6");
     }
 
     @Override
@@ -37,6 +36,7 @@ public class Attack implements Action {
 
     private void compileAttributes() {
         AttributeCompiler compiler = new AttributeCompiler(attacker);
+        compiler.compileAll();
         compiler.compile(attackAttr);
         compiler.compile(damageAttr);
     }
@@ -46,20 +46,21 @@ public class Attack implements Action {
     }
 
     public int getAttackResult() {
-        return attackResult;
+        return attackRoll.getResult();
     }
 
     public int getDamageResult() {
-        return damageResult;
+        return damageRoll.getResult();
+    }
+    public void setMelee(boolean toggle) {
+        isMelee = toggle;
     }
 
     private Character attacker;
     private Character target;
     private final Attribute damageAttr;
     private final Attribute attackAttr;
-    private int attackResult;
-    private String attackResultString;
-    private boolean wasRaised;
-    private int damageResult;
-    private String damageResultString;
+    private DiceRoll attackRoll;
+    private DiceRoll damageRoll;
+    private boolean isMelee;
 }

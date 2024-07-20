@@ -52,4 +52,8 @@ public class Character {
     public Attribute getAttribute(String attributeName) {
         return attributes.get(attributeName);
     }
+
+    public List<Attribute> getAllAttributes() {
+        return attributes.values().stream().toList();
+    }
 }

@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 public class RollParser {
     private String rollText;
     private List<RollToken> tokens;
-    private HashMap<RollToken, DiceRoll> diceRolls;
-    boolean readyToRoll = false;
 
     public RollParser(String rollText) {
         this.rollText = rollText;
@@ -18,17 +16,8 @@ public class RollParser {
 
     public void parse() {
         tokens = new ArrayList<>();
-        diceRolls = new HashMap<>();
-        readyToRoll = false;
         preProcess();
         tokenize();
-        if (attributesFound().isEmpty()) {
-            computeDiceRollTokens();
-            readyToRoll = true;
-        }
-    }
-
-    private void computeDiceRollTokens() {
     }
 
     private void tokenize() {
@@ -75,78 +64,11 @@ public class RollParser {
         }
     }
 
-    public int rollForResult() {
-        execute();
-        return diceRolls.values().stream().mapToInt(DiceRoll::roll).sum();
-    }
-
     private void preProcess() {
         rollText = rollText.replaceAll("[ \t\n\r]", "");
     }
 
-    public List<String> attributesFound() {
-        return tokens.stream().filter(T -> T.type.equals(RollTokenType.ATTRIBUTE)).map((T) -> T.text).collect(Collectors.toList());
-    }
-
-    public boolean canRoll() {
-        return attributesFound().isEmpty();
-    }
-
-    public List<DiceRoll> getDiceRolls() {
-        return new ArrayList<>();
-    }
-
     public List<RollToken> getTokens() {
         return tokens;
-    }
-
-    public void execute() {
-        createRolls(tokens);
-        for (DiceRoll roll: diceRolls.values()) {
-            roll.roll();
-        }
-    }
-
-    private void createRolls(List<RollToken> rollTokens) {
-        for (RollToken token: rollTokens) {
-            if (!diceRolls.containsKey(token)) {
-                switch (token.type) {
-                    case DICE -> createDiceRoll(token);
-                    case MODIFIER -> createModiferRoll(token);
-                    case ATTRIBUTE -> createRolls(token.attributeDependency.getRollTokens());
-                }
-            }
-        }
-    }
-
-    private void createDiceRoll(RollToken token) {
-        int sign = token.text.getBytes()[0] == '-' ? -1 : 1;
-
-        String rollTextWOSign = token.text.replaceAll("[+-]", "");
-        String[] values = token.text.split("d");
-        int numberOfDice = !values[0].isEmpty() ? Math.abs(Integer.parseInt(values[0])) : 1;
-        int numberOfFaces = Integer.parseInt(values[1]);
-
-        DiceRoll diceRoll = new DiceRoll(false);
-        for (int i=0; i<numberOfDice; ++i)
-            diceRoll.addDie(numberOfFaces);
-        diceRoll.setSign(sign);
-        diceRolls.put(token, diceRoll);
-    }
-
-
-    private void createModiferRoll(RollToken token) {
-        DiceRoll diceRoll = new DiceRoll(false);
-        diceRoll.setModifier(Integer.parseInt(token.text));
-        diceRolls.put(token, diceRoll);
-    }
-
-    public String printResult() {
-        StringBuilder ret = new StringBuilder();
-        for (RollToken token: tokens)
-            ret.append(diceRolls.get(token).printResult()).append(" ");
-        ret.append("= ");
-        ret.append((Integer) diceRolls.values().stream().mapToInt(DiceRoll::getResult).sum());
-        return ret.toString();
     }
 }
