@@ -13,14 +13,14 @@ class DiceRollTest {
 
     @Test
     void roll() {
-        DiceRoll diceRoll = new DiceRoll(true);
-        diceRoll.addDie(6).addDie(6);
-        assertEquals(6, diceRoll.roll());
+        DiceRoll diceRoll = new DiceRoll();
+        diceRoll.addDie(6).addDie(6).addMod(1);
+        assertEquals(7, diceRoll.roll());
     }
 
     @Test
     void reset() {
-        DiceRoll diceRoll = new DiceRoll(false);
+        DiceRoll diceRoll = new DiceRoll();
         diceRoll.addDie(6);
         assertEquals(3, diceRoll.roll());
         diceRoll.reset();

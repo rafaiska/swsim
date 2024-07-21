@@ -6,6 +6,8 @@ import org.swsim.attribute.AttributeRoller;
 import org.swsim.character.Character;
 import org.swsim.core.DiceRoll;
 
+import java.util.ArrayList;
+
 public class Attack implements Action {
     public Attack(Attribute attack, Attribute damage) {
         isMelee = true;
@@ -15,34 +17,52 @@ public class Attack implements Action {
 
     @Override
     public void execute() {
-        AttributeRoller roller = new AttributeRoller(attackAttr);
-        attackRoll = roller.roll();
-        Attribute damageBonus = wasRaised(roller) ? new Attribute("d6") : new Attribute("0");
-        roller = new AttributeRoller(damageAttr).addBonus(damageBonus);
-        damageRoll = roller.roll();
+        AttributeCompiler compiler = new AttributeCompiler(attacker);
+        compiler.compile(attackAttr);
+        compiler.compile(damageAttr);
+        makeAttackRoll();
+        makeDamageRoll();
     }
 
-    public boolean wasRaised(AttributeRoller roller) {
+    private void makeDamageRoll() {
+        AttributeRoller damageRoller = new AttributeRoller(attackAttr);
+        damageRoll = damageRoller.getDiceRoll();
+        if (wasRaised()) {
+            makeBonusDamageRoll("d6");
+        }
+    }
+
+    private void makeBonusDamageRoll(String rollText) {
+        Attribute bonusDamage = new Attribute(rollText);
+        new AttributeCompiler(attacker).compile(bonusDamage);
+        bonusDamageRoll = new AttributeRoller(bonusDamage).getDiceRoll();
+    }
+
+    private void makeAttackRoll() {
+        AttributeRoller attackRoller = new AttributeRoller(attackAttr);
+        attackRoll = attackRoller.getDiceRoll();
+    }
+
+    public boolean wasRaised() {
         int defense = isMelee ? target.getAttribute("Parry").castToInt() : 4;
-        int raises = roller.getRaisesAgainst(defense);
+        int raises = attackRoll.getRaisesAgainst(defense);
         return raises >= 1;
     }
 
     @Override
     public void setActor(Character character) {
         attacker = character;
-        compileAttributes();
+        compileAttributes(attacker);
     }
 
-    private void compileAttributes() {
-        AttributeCompiler compiler = new AttributeCompiler(attacker);
+    private void compileAttributes(Character character) {
+        AttributeCompiler compiler = new AttributeCompiler(character);
         compiler.compileAll();
-        compiler.compile(attackAttr);
-        compiler.compile(damageAttr);
     }
 
     public void setTarget(Character target) {
         this.target = target;
+        compileAttributes(target);
     }
 
     public int getAttackResult() {
@@ -50,7 +70,8 @@ public class Attack implements Action {
     }
 
     public int getDamageResult() {
-        return damageRoll.getResult();
+        int bonus = bonusDamageRoll == null ? 0 : bonusDamageRoll.getResult();
+        return damageRoll.getResult() + bonus;
     }
     public void setMelee(boolean toggle) {
         isMelee = toggle;
@@ -63,4 +84,5 @@ public class Attack implements Action {
     private DiceRoll attackRoll;
     private DiceRoll damageRoll;
     private boolean isMelee;
+    private DiceRoll bonusDamageRoll;
 }

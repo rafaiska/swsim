@@ -61,4 +61,8 @@ public class DiceRoll {
     public void addMod(int mod) {
         this.mod += mod;
     }
+
+    public int getRaisesAgainst(int target) {
+        return Math.floorDiv(result - target, 4);
+    }
 }

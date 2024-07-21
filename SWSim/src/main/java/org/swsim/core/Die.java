@@ -8,7 +8,6 @@ public class Die {
     int faces;
     boolean aced;
     int sign;
-    boolean lastRollWasAced;
     List<Integer> aceRollValues;
     Random generator;
     int result;
@@ -20,22 +19,24 @@ public class Die {
         generator = new Random(RandomSeedManager.getInstance().getSeed());
     }
 
+    public Die(int faces, boolean aced) {
+        this(faces, aced, 1);
+    }
+
     public int roll() {
         return aced ? rollWithAces() : rollWoAces();
     }
 
     public int rollWoAces() {
-        lastRollWasAced = false;
         result = (Math.abs(generator.nextInt()) % faces) + 1;
         return result;
     }
 
     public int rollWithAces() {
-        lastRollWasAced = true;
         int accumulator = 0;
         aceRollValues = new ArrayList<>();
         while (true) {
-            int roll = roll();
+            int roll = rollWoAces();
             aceRollValues.add(roll);
             accumulator += roll;
             if (roll != faces)
@@ -46,6 +47,6 @@ public class Die {
     }
 
     public String printResult() {
-        return String.format("%d (d%d%s)", result, faces, lastRollWasAced ? "!" : "");
+        return String.format("%d (d%d%s)", result, faces, result > faces ? "!" : "");
     }
 }

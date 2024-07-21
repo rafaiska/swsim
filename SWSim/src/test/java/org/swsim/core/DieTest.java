@@ -12,13 +12,13 @@ class DieTest {
 
     @Test
     void roll() {
-        Die die = new Die(6);
+        Die die = new Die(6, false);
         Assertions.assertEquals(4, die.roll());
     }
 
     @Test
     void rollWithAces() {
-        Die die = new Die(6);
+        Die die = new Die(6, true);
         Assertions.assertEquals(4, die.rollWithAces());
         Assertions.assertEquals(3, die.rollWithAces());
         Assertions.assertEquals(4, die.rollWithAces());

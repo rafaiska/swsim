@@ -10,8 +10,10 @@ class AttributeCompilerTest {
     public void compileSimpleAttribute() {
         Attribute a = new Attribute("Str + d4");
         Character c = new Character();
-        c.setAttribute("Str", new Attribute("d12 + 1"));
+        Attribute attributeStrength = new Attribute("d12 + 1");
+        c.setAttribute("Str", attributeStrength);
         new AttributeCompiler(c).compile(a);
-        assertEquals("d12 +1 +d4", a.toString());
+        assertEquals(1, a.getDependencies().size());
+        assertEquals(attributeStrength, a.getDependencies().get("Str"));
     }
 }

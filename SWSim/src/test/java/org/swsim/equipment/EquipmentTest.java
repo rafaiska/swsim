@@ -15,9 +15,9 @@ class EquipmentTest extends WorkspaceTest {
 
         assertEquals(Weapon.class, equipment.getClass());
         Weapon weapon = (Weapon) equipment;
-        assertEquals("+Str", weapon.getDamage().getValue());
-        assertEquals("+Fighting", weapon.getAttackAttribute().getValue());
-        assertEquals("+0", weapon.getRange().getValue());
+        assertEquals("Str", weapon.getDamage().getValue());
+        assertEquals("Fighting", weapon.getAttackAttribute().getValue());
+        assertEquals("0", weapon.getRange().getValue());
     }
 
 }

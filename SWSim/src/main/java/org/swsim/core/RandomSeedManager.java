@@ -7,7 +7,7 @@ public class RandomSeedManager {
     long seed = 0;
 
     private RandomSeedManager(){}
-    static RandomSeedManager getInstance() {
+    public static RandomSeedManager getInstance() {
         if (instance == null)
             instance = new RandomSeedManager();
         return instance;

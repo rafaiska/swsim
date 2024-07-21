@@ -18,13 +18,14 @@ public class AttributeRoller {
         attribute = a;
     }
 
-    public DiceRoll roll() {
+    public DiceRoll getDiceRoll() {
         if (!attribute.isCompiled())
             throw new RuntimeException("Can't roll not compiled attribute");
         RollParser parser = new RollParser(attribute.getRollText());
         parser.parse();
         DiceRoll roll = new DiceRoll();
         buildRoll(parser, roll);
+        roll.roll();
         return roll;
     }
 
@@ -65,7 +66,7 @@ public class AttributeRoller {
                 case CLOSE_PARENTHESIS -> parenthesisBalancer -= 1;
                 case ARITHMETIC_OP -> currentSign = getSign(t);
                 case DICE -> addDice(t, currentSign, roll);
-                case MODIFIER -> roll.addMod(Integer.parseInt(t.text));
+                case MODIFIER -> roll.addMod(currentSign * Integer.parseInt(t.text));
             }
         }
         if (parenthesisBalancer != 0)
@@ -87,7 +88,8 @@ public class AttributeRoller {
             throw new RuntimeException("Invalid dice token");
 
         boolean aced = matcher.group().equals("da");
-        int numberOfDice = Integer.parseInt(token.text.substring(0, matcher.start()));
+        String numberOfDiceText = token.text.substring(0, matcher.start());
+        int numberOfDice = numberOfDiceText.isEmpty() ? 1 : Integer.parseInt(numberOfDiceText);
         int numberOfFaces = Integer.parseInt(token.text.substring(matcher.end()));
 
         for (int i=0; i<numberOfDice; ++i)

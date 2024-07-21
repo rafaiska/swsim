@@ -1,6 +1,7 @@
 package org.swsim.attribute;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Attribute {
     private String value;
@@ -44,5 +45,9 @@ public class Attribute {
 
     public int castToInt() {
         return Integer.parseInt(getRollText());
+    }
+
+    public Map<String, Attribute> getDependencies() {
+        return dependencies;
     }
 }
