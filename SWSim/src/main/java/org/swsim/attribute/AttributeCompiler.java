@@ -51,6 +51,7 @@ public class AttributeCompiler {
             attribute.addDependency(dependencyName, dependency);
             searchStack.add(dependency);
         }
+        attribute.setWildCardRoll(character.isWildCard() && attribute.isTrait());
     }
 
     private HashMap<String, AttributeToken> mapAllTokens(Attribute attribute) {

@@ -46,11 +46,18 @@ public class DiceRoll {
         return result;
     }
 
-    public String printResult() {
-        String signStr = result >= 0 ? "+" : "-";
-        String diceStr = dice.isEmpty() ? "" : dice.stream().map(D -> signStr + D.printResult()).collect(Collectors.joining(" "));
-        String modStr = mod != 0 ? String.valueOf(mod) : "";
-        return diceStr + modStr;
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(sign >= 0 ? "+" : "-");
+        builder.append("(");
+        builder.append(dice.isEmpty() ? "" : dice.stream().map(Die::toString).collect(Collectors.joining(" +")));
+        if (mod != 0) {
+            builder.append(mod > 0 ? " +" : " ");
+            builder.append(mod);
+        }
+        builder.append(")");
+        return builder.toString();
     }
 
     private final List<Die> dice;

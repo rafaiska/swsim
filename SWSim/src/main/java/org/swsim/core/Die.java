@@ -46,7 +46,8 @@ public class Die {
         return result;
     }
 
-    public String printResult() {
-        return String.format("%d (d%d%s)", result, faces, result > faces ? "!" : "");
+    @Override
+    public String toString() {
+        return String.format("%d (d%s%d%s)", result, aced ? "a" : "", faces, result > faces ? "!" : "");
     }
 }

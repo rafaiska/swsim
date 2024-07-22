@@ -14,6 +14,7 @@ class DieTest {
     void roll() {
         Die die = new Die(6, false);
         Assertions.assertEquals(4, die.roll());
+        Assertions.assertEquals("4 (d6)", die.toString());
     }
 
     @Test
@@ -30,5 +31,6 @@ class DieTest {
         Assertions.assertEquals(2, die.aceRollValues.size());
         Assertions.assertEquals(6, die.aceRollValues.get(0));
         Assertions.assertEquals(2, die.aceRollValues.get(1));
+        Assertions.assertEquals("8 (da6!)", die.toString());
     }
 }

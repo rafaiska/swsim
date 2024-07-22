@@ -7,6 +7,8 @@ public class Attribute {
     private String value;
     private boolean isCompiled;
     private HashMap<String, Attribute> dependencies;
+    private boolean wildCardRoll = false;
+    private boolean isTrait = false;
 
     public Attribute(String value) {
         setValue(value);
@@ -49,5 +51,13 @@ public class Attribute {
 
     public Map<String, Attribute> getDependencies() {
         return dependencies;
+    }
+
+    public void setWildCardRoll(boolean toggle) {
+        this.wildCardRoll = toggle;
+    }
+
+    public boolean isTrait() {
+        return isTrait;
     }
 }

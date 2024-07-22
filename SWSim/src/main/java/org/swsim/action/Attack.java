@@ -85,4 +85,18 @@ public class Attack implements Action {
     private DiceRoll damageRoll;
     private boolean isMelee;
     private DiceRoll bonusDamageRoll;
+
+    public String getAttackRoll() {
+        return attackRoll.toString();
+    }
+
+    public String getDamageRoll() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(damageRoll.toString());
+        if (bonusDamageRoll != null) {
+            builder.append(" ");
+            builder.append(bonusDamageRoll);
+        }
+        return builder.toString();
+    }
 }

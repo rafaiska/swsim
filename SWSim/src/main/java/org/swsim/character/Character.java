@@ -16,9 +16,11 @@ public class Character {
     private Card currentTurnCard;
     private Player player;
     private Team team;
+    boolean isWildCard;
 
     public Character() {
         attributes = new HashMap<>();
+        isWildCard = false;
     }
 
     public void drawTurnOrder(Deck deck) {
@@ -55,5 +57,9 @@ public class Character {
 
     public List<Attribute> getAllAttributes() {
         return attributes.values().stream().toList();
+    }
+
+    public boolean isWildCard() {
+        return isWildCard;
     }
 }

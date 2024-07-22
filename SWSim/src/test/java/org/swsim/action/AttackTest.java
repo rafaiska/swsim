@@ -32,5 +32,7 @@ class AttackTest {
         assertTrue(attack.wasRaised());
         assertEquals(9, attack.getAttackResult());
         assertEquals(11, attack.getDamageResult());
+        assertEquals("+(9 (da8!))", attack.getAttackRoll());
+        assertEquals("+(9 (da8!)) +(2 (d6))", attack.getDamageRoll());
     }
 }

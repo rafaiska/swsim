@@ -16,6 +16,7 @@ class DiceRollTest {
         DiceRoll diceRoll = new DiceRoll();
         diceRoll.addDie(6).addDie(6).addMod(1);
         assertEquals(7, diceRoll.roll());
+        assertEquals("+(3 (d6) +3 (d6) +1)", diceRoll.toString());
     }
 
     @Test
@@ -23,7 +24,10 @@ class DiceRollTest {
         DiceRoll diceRoll = new DiceRoll();
         diceRoll.addDie(6);
         assertEquals(3, diceRoll.roll());
+        assertEquals("+(3 (d6))", diceRoll.toString());
+
         diceRoll.reset();
         assertEquals(0, diceRoll.roll());
+        assertEquals("+()", diceRoll.toString());
     }
 }
