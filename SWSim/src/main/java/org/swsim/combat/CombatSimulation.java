@@ -7,9 +7,11 @@ import org.swsim.utils.LoggerConfig;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class CombatSimulation {
     public void start() {
@@ -41,6 +43,12 @@ public class CombatSimulation {
     }
 
     private boolean isGameOver() {
+        HashSet<Team> remainingTeams = new HashSet<>();
+        for (Character c: characters.stream().filter(C -> !C.isIncapacitated()).toList()) {
+            remainingTeams.add(c.getTeam());
+            if (remainingTeams.size() > 1)
+                return false;
+        }
         return true;
     }
 

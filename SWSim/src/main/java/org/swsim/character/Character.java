@@ -17,10 +17,15 @@ public class Character {
     private Player player;
     private Team team;
     boolean isWildCard;
+    int wounds;
+    boolean isIncapacitated;
+    HashMap<String, EquipmentSlot> equipmentSlots;
 
     public Character() {
         attributes = new HashMap<>();
         isWildCard = false;
+        wounds = 0;
+        isIncapacitated = false;
     }
 
     public void drawTurnOrder(Deck deck) {
@@ -61,5 +66,13 @@ public class Character {
 
     public boolean isWildCard() {
         return isWildCard;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public boolean isIncapacitated() {
+        return isIncapacitated;
     }
 }
