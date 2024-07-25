@@ -11,9 +11,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class CombatSimulation {
+    public void addCharacter(Character character) {
+        if(characters == null)
+            characters = new ArrayList<>();
+        characters.add(character);
+    }
+
     public void start() {
         currentTurn = 0;
         logSimulationInfo("Simulation started");
@@ -21,7 +26,7 @@ public class CombatSimulation {
         logSimulationInfo("Simulation ended");
     }
 
-    public void gameLoop() {
+    private void gameLoop() {
         while (!isGameOver()) {
             logSimulationInfo(String.format("Turn %d started!", currentTurn));
             for (Character c: characters)

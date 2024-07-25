@@ -75,4 +75,8 @@ public class Character {
     public boolean isIncapacitated() {
         return isIncapacitated;
     }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 }
