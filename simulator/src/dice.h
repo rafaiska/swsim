@@ -27,10 +27,13 @@ typedef struct swsim_dice_pool {
     uint8_t d10_cursor;
     uint8_t d12_cursor;
     uint8_t d20_cursor;
+    uint8_t init;
 } swsim_dice_pool;
 
 void roll(swsim_die* die);
-void init_pool(swsim_dice_pool* pool);
+void init_pool(swsim_dice_pool* pool, uint32_t seed);
+/* Returns NULL when faces is unsupported or amount exceeds DICE_POOL_SIZE. */
+swsim_die* roll_dice(uint8_t faces, uint8_t amount);
 
 #ifdef __cplusplus
 }

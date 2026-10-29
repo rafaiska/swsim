@@ -17,7 +17,7 @@ class DiceTest : public testing::Test {
 
         void SetUp() override
         {
-            srand(0);
+            init_pool(&pool, 0);
         }
 
         void TearDown() override
@@ -40,7 +40,6 @@ void assert_die(swsim_die* die, uint8_t faces) {
 
 TEST_F(DiceTest, init_pool)
 {
-    init_pool(&pool);
     ASSERT_EQ(pool.d4_cursor, 0);
     ASSERT_EQ(pool.d6_cursor, 0);
     ASSERT_EQ(pool.d8_cursor, 0);
@@ -56,4 +55,30 @@ TEST_F(DiceTest, init_pool)
         assert_die(&(pool.d12_pool[i]), 12);
         assert_die(&(pool.d20_pool[i]), 20);
     }
+}
+
+TEST_F(DiceTest, test_roll_from_pool) {
+    swsim_die* result = roll_dice(6, 10);
+    ASSERT_NE(result, nullptr);
+    for (int i = 0; i < 10; ++i) {
+        SCOPED_TRACE("dice index: " + std::to_string(i));
+        assert_die(&(result[i]), 6);
+    }
+}
+
+TEST_F(DiceTest, rolls_up_to_pool_size) {
+    swsim_die* result = roll_dice(8, DICE_POOL_SIZE);
+    ASSERT_NE(result, nullptr);
+    for (int i = 0; i < DICE_POOL_SIZE; ++i) {
+        SCOPED_TRACE("dice index: " + std::to_string(i));
+        assert_die(&(result[i]), 8);
+    }
+}
+
+TEST_F(DiceTest, rejects_amount_larger_than_pool) {
+    ASSERT_EQ(roll_dice(6, DICE_POOL_SIZE + 1), nullptr);
+}
+
+TEST_F(DiceTest, rejects_unsupported_faces) {
+    ASSERT_EQ(roll_dice(7, 1), nullptr);
 }
